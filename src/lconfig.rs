@@ -33,7 +33,7 @@ pub struct Config {
     pub data: CfgData,
 }
 
-impl<'a> Config {
+impl Config {
     pub fn new(path: String, data: CfgData) -> Self {
         Config { path, data }
     }
@@ -51,7 +51,7 @@ impl<'a> Config {
     }
 }
 
-fn get_wk_paths<'a>() -> Result<String, ConfigError> {
+fn get_wk_paths() -> Result<String, ConfigError> {
     let home_path = match std::env::var("HOME") {
         Ok(path) => path,
         Err(e) => match e {
