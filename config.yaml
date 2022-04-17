@@ -1,0 +1,12 @@
+settings:
+  templateDir: "~/.config/leet/templates/"
+
+templates:
+  cpp:
+    folder: "cpp"
+    files:
+      - "main.cpp"
+  python:
+    folder: "py"
+    files:
+      - "main.py"
