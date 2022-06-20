@@ -21,6 +21,9 @@ pub enum ConfigError {
 
     #[error("Environment variable not found: {}", .var)]
     EnvNotFoundError { var: String },
+
+    #[error("Validation Error: {}", .msg)]
+    ValidationError { msg: String },
 }
 
 #[derive(Error, Debug)]
