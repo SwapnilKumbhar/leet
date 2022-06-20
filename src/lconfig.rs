@@ -35,6 +35,7 @@ pub struct Config {
 
 impl Config {
     pub fn new(path: String, data: CfgData) -> Self {
+        // TODO: Convert all relative paths to absolute.
         Config { path, data }
     }
 
@@ -85,6 +86,26 @@ fn get_wk_paths() -> Result<String, ConfigError> {
     Ok(path)
 }
 
+fn validate_config(cfg: Config) -> Result<Config, ConfigError> {
+    // write less.
+    macro_rules! pathExistsOrErr {
+        ($path:expr) => {
+            if !Path::new(&$path).exists() {
+                return Err(ConfigError::ValidationError {
+                    msg: format!("Path [{}] does not exist", $path),
+                });
+            }
+        };
+    }
+    // Ensure every path exists
+    pathExistsOrErr!(cfg.path);
+
+    // Validate CfgData
+    pathExistsOrErr!(cfg.data.settings.template_dir);
+
+    Ok(cfg)
+}
+
 pub fn parse_config(path: Option<String>) -> Result<Config, ConfigError> {
     let final_path = match path {
         Some(path) => {
@@ -117,6 +138,7 @@ pub fn parse_config(path: Option<String>) -> Result<Config, ConfigError> {
 
     info!("Successfully parsed the Config file");
 
+    // validate the file
     let cfg = Config::new(final_path, cfg_data);
-    Ok(cfg)
+    validate_config(cfg)
 }

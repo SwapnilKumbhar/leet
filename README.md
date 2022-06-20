@@ -55,7 +55,7 @@ $ leet show-languages
 
 ## Roadmap
 
-- [ ] Template validity checks.
+- [x] Template validity checks.
 - [ ] Starter templates for all Leetcode supported languages.
 - [ ] Template variables.
 - [ ] Enable pulling starter scaffolding directly from Leetcode.
