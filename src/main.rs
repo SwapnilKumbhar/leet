@@ -1,4 +1,5 @@
 use clap::Parser;
+use leetcode::Leetcode;
 use log::{error, info, LevelFilter};
 use log4rs::{
     append::console::ConsoleAppender,
@@ -7,30 +8,26 @@ use log4rs::{
     Config,
 };
 use std::process::exit;
+use tokio;
 
 mod action;
 mod cli;
 mod error;
 mod lconfig;
+mod leetcode;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     // Parse commandline args
     let args = cli::Args::parse();
 
-    // Get log level.
-    let log_level = if args.verbose {
-        LevelFilter::Info
-    } else {
-        LevelFilter::Warn
-    };
-
     // Configure logging
     let appender = ConsoleAppender::builder()
-        .encoder(Box::new(PatternEncoder::new("{h([{l}])} {m}{n}")))
+        .encoder(Box::new(PatternEncoder::new("{h([{l} {M}:{L}])} {m}{n}")))
         .build();
     let log_cfg = match Config::builder()
         .appender(Appender::builder().build("stdout", Box::new(appender)))
-        .build(Root::builder().appender("stdout").build(log_level))
+        .build(Root::builder().appender("stdout").build(LevelFilter::Info))
     {
         Ok(cfg) => cfg,
         Err(e) => {
@@ -66,32 +63,50 @@ fn main() {
 
     // Run the given command
     match args.command {
-        cli::Commands::New { language, name } => {
-            let template = match cfg.get_template(&language) {
-                Some(t) => t,
-                None => {
-                    error!(
-                        "Could not find language `{}` in the current config. Exiting...",
-                        language
-                    );
-                    exit(-1)
-                }
-            };
-            match action::doit(&language, template, cfg.get_tdir_path(), name) {
-                Ok(_) => println!("Done!"),
+        cli::Commands::New {
+            template,
+            link,
+            language,
+        } => {
+            // Create a client for leetcode
+            let leetcode = Leetcode::new();
+
+            let question = match leetcode.get_question_by_link(&link).await {
+                Ok(q) => q,
                 Err(e) => {
-                    error!("Fatal: {}", e)
+                    error!("Failed to get question from leetcode: {:?}", e);
+                    exit(-1);
                 }
             };
+
+            let lc_action = action::Action::new(question, &template, &cfg, language).unwrap();
+
+            match lc_action.run() {
+                Ok(_) => println!("Created!"),
+                Err(e) => {
+                    error!("Failed to run action: {:?}", e);
+
+                    // Die or panic, it's all the same.
+                    match e {
+                        error::ActionError::DirectoryExistsError { dir_name } => {
+                            error!("Please delete the directory {} and try again", dir_name);
+                        }
+                        _ => {
+                            error!("Cleaning up!");
+                            lc_action.clean_up().unwrap();
+                        }
+                    }
+                }
+            }
         }
-        cli::Commands::ShowLanguages {} => {
-            let languages = cfg.get_languages();
+        cli::Commands::ShowTemplates {} => {
+            let templates = cfg.get_templates();
             println!(
                 "The current config ({}) supports these languages - ",
                 cfg.path
             );
-            for language in languages {
-                println!("\t- {}", language)
+            for template in templates {
+                println!("\t- {}", template);
             }
         }
     };

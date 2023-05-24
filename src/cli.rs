@@ -9,10 +9,6 @@ pub struct Args {
     #[clap(short, long, global = true)]
     pub config: Option<String>,
 
-    /// Toggles verbose logs (INFO level)
-    #[clap(short, long, global = true)]
-    pub verbose: bool,
-
     /// Command to run
     #[clap(subcommand)]
     pub command: Commands,
@@ -21,8 +17,12 @@ pub struct Args {
 #[derive(Subcommand, Debug)]
 pub enum Commands {
     /// Create a new project
-    New { language: String, name: String },
+    New {
+        template: String,
+        language: String,
+        link: String,
+    },
 
     /// Show currently supported languages
-    ShowLanguages {},
+    ShowTemplates {},
 }

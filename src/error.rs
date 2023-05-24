@@ -28,9 +28,6 @@ pub enum ConfigError {
 
 #[derive(Error, Debug)]
 pub enum ActionError {
-    #[error("Failed to copy `{}` to `{}`", .src, .dst)]
-    CopyError { src: String, dst: String },
-
     #[error("OS Error.")]
     OsError(#[from] std::io::Error),
 
@@ -42,4 +39,7 @@ pub enum ActionError {
 
     #[error("Directory already exists: {}", .dir_name)]
     DirectoryExistsError { dir_name: String },
+
+    #[error("Templating failed: {}", .msg)]
+    TemplateError { msg: String },
 }
