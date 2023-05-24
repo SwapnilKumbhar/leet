@@ -1,9 +1,9 @@
 // Perform the copying, templating etc.
 
-use handlebars::{self, TemplateError};
+use handlebars;
 use log::{error, info};
 use serde::Serialize;
-use std::fs::{read_to_string, remove_dir_all, File};
+use std::fs::{remove_dir_all, File};
 use std::path::{Path, PathBuf};
 
 use crate::lconfig;

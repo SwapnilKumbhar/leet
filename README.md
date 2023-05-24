@@ -61,10 +61,13 @@ $ leet show-languages
 
 ## Roadmap
 
+The Project tab has more information, but here's the overview --
+
 - [x] Template validity checks.
 - [x] Template variables.
 - [x] Enable pulling starter scaffolding directly from Leetcode.
 - [ ] Starter templates for all Leetcode supported languages.
+- [ ] Unit tests.
 - [ ] Document everything!
 
 ## License
