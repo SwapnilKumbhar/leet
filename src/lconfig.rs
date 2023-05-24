@@ -1,11 +1,10 @@
-use log::info;
+use log::{error, info};
 use serde::Deserialize;
 use serde_yaml::from_reader;
 use std::{fs, path::Path};
 
 use crate::error::ConfigError;
 
-static DEFAULT_ETC_PATH: &str = "/etc/leet/config.yaml";
 static DEFAULT_HOME_PATH: &str = ".config/leet/config.yaml";
 
 #[derive(Deserialize, Debug)]
@@ -22,11 +21,10 @@ pub struct ConfigSettings {
 
 #[derive(Deserialize, Debug)]
 pub struct CfgData {
-    settings: ConfigSettings,
-    templates: std::collections::HashMap<String, LanguageTemplate>,
+    pub settings: ConfigSettings,
+    pub templates: std::collections::HashMap<String, LanguageTemplate>,
 }
 
-// TODO: Check if we can change path to a str instead.
 #[derive(Debug)]
 pub struct Config {
     pub path: String,
@@ -39,16 +37,12 @@ impl Config {
         Config { path, data }
     }
 
-    pub fn get_languages(&self) -> Vec<String> {
+    pub fn get_templates(&self) -> Vec<String> {
         self.data.templates.keys().cloned().collect::<Vec<String>>()
     }
 
     pub fn get_template(&self, key: &String) -> Option<&LanguageTemplate> {
         self.data.templates.get(key)
-    }
-
-    pub fn get_tdir_path(&self) -> &String {
-        &self.data.settings.template_dir
     }
 }
 
@@ -76,11 +70,9 @@ fn get_wk_paths() -> Result<String, ConfigError> {
             Ok(path) => path,
             Err(_) => return Err(ConfigError::OsStringError {}),
         }
-    } else if Path::new(DEFAULT_ETC_PATH).exists() {
-        DEFAULT_ETC_PATH.to_string()
     } else {
-        println!("Failed to locate `config.yaml`.");
-        println!("Please create one in `/etc/leet/` or `~/.config/leet`");
+        error!("Failed to locate `config.yaml`.");
+        error!("Please create one in `~/.config/leet` or pass an explicit path");
         return Err(ConfigError::ConfigNotFoundError {});
     };
     Ok(path)

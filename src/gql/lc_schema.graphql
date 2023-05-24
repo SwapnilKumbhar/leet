@@ -1,0 +1,20 @@
+schema {
+  query: QueryRoot
+}
+
+type CodeSnippets {
+  lang: String!
+  langSlug: String!
+  code: String!
+}
+
+type QuestionData {
+  codeSnippets: [CodeSnippets!]!
+  questionFrontendId: String!
+  exampleTestcaseList: [String!]!
+  title: String!
+}
+
+type QueryRoot {
+  question(titleSlug: String!): QuestionData!
+}

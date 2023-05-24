@@ -1,9 +1,16 @@
 # `leet`
 
-Generate (custom) starter templates for Leetcode-like problems.
+Generate (custom) starter templates for Leetcode problems, pulled directly from Leetcode!
 
 ## Usage
 
+For an example template `cpp-make` and the iconic [Two Sum](https://www.leetcode.com/problems/two-sum), run this -- 
+
+```
+leet new cpp-make https://leetcode.com/problems/two-sum
+```
+
+Here's the usage -
 
 ```
 Leet 
@@ -16,12 +23,11 @@ USAGE:
 OPTIONS:
     -c, --config <CONFIG>    Provide a custom config file
     -h, --help               Print help information
-    -v, --verbose            Toggles verbose logs (INFO level)
 
 SUBCOMMANDS:
     help              Print this message or the help of the given subcommand(s)
     new               Create a new project
-    show-languages    Show currently supported languages
+    show-templates    Show currently supported languages
 ```
 
 Create a new Project -- 
@@ -31,16 +37,16 @@ leet-new
 Create a new project
 
 USAGE:
-    leet new [OPTIONS] <LANGUAGE> <NAME>
+    leet new [OPTIONS] <TEMPLATE> <LANGUAGE> <LINK>
 
 ARGS:
+    <TEMPLATE>    
     <LANGUAGE>    
-    <NAME>        
+    <LINK>        
 
 OPTIONS:
     -c, --config <CONFIG>    Provide a custom config file
     -h, --help               Print help information
-    -v, --verbose            Toggles verbose logs (INFO level)
 ```
 
 ```
@@ -55,10 +61,14 @@ $ leet show-languages
 
 ## Roadmap
 
+The Project tab has more information, but here's the overview --
+
 - [x] Template validity checks.
+- [x] Template variables.
+- [x] Enable pulling starter scaffolding directly from Leetcode.
 - [ ] Starter templates for all Leetcode supported languages.
-- [ ] Template variables.
-- [ ] Enable pulling starter scaffolding directly from Leetcode.
+- [ ] Unit tests.
+- [ ] Document everything!
 
 ## License
 

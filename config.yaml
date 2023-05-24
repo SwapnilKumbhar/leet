@@ -1,11 +1,12 @@
 settings:
-  templateDir: "~/.config/leet/templates/"
+  templateDir: "/home/swapnil/.config/leet/templates/"
 
 templates:
-  cpp:
+  cpp-make:
     folder: "cpp"
     files:
       - "main.cpp"
+      - "Makefile"
   python:
     folder: "py"
     files:
