@@ -3,11 +3,12 @@ settings:
 
 templates:
   cpp-make:
-    folder: "cpp"
+    language: C++
     files:
       - "main.cpp"
       - "Makefile"
+
   python:
-    folder: "py"
+    language: Python
     files:
       - "main.py"
