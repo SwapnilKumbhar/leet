@@ -1,6 +1,6 @@
 use log::{error, info};
 use serde::Deserialize;
-use serde_yaml::from_reader;
+use serde_yaml;
 use std::{fs, path::Path};
 
 use crate::error::ConfigError;
@@ -9,7 +9,7 @@ static DEFAULT_HOME_PATH: &str = ".config/leet/config.yaml";
 
 #[derive(Deserialize, Debug)]
 pub struct LanguageTemplate {
-    pub folder: String,
+    pub language: String,
     pub files: Vec<String>,
 }
 
@@ -33,7 +33,6 @@ pub struct Config {
 
 impl Config {
     pub fn new(path: String, data: CfgData) -> Self {
-        // TODO: Convert all relative paths to absolute.
         Config { path, data }
     }
 
@@ -121,7 +120,7 @@ pub fn parse_config(path: Option<String>) -> Result<Config, ConfigError> {
         }
     };
 
-    let cfg_data = match from_reader(config_file) {
+    let cfg_data = match serde_yaml::from_reader(config_file) {
         Ok(v) => v,
         Err(e) => {
             return Err(ConfigError::YamlParseError { msg: e.to_string() });

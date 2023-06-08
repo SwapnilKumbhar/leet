@@ -16,7 +16,6 @@ pub struct Action<'a> {
     template: &'a String,
     config: &'a lconfig::Config,
     project_dir: String,
-    language: String,
 }
 
 impl<'a> Action<'a> {
@@ -39,15 +38,16 @@ impl<'a> Action<'a> {
     /// Renders the individual templates.
     pub fn render_templates(&self) -> Result<(), ActionError> {
         // TODO: Handle this better than unwrap.
-        let template_files = self.config.get_template(&self.template).unwrap();
+        let chosen_template = self.config.get_template(&self.template).unwrap();
 
         let code_snippet = match self.question.code_snippets.iter().find(|&x| {
-            *x.lang == String::from(&self.language) || *x.langSlug == String::from(&self.language)
+            *x.lang == String::from(&chosen_template.language)
+                || *x.langSlug == String::from(&chosen_template.language)
         }) {
             Some(cs) => cs,
             None => {
                 return Err(ActionError::TemplateError {
-                    msg: format!("Language {} not found", self.language),
+                    msg: format!("Language {} not found", &chosen_template.language),
                 })
             }
         };
@@ -69,7 +69,7 @@ impl<'a> Action<'a> {
 
         let mut template = handlebars::Handlebars::new();
 
-        for template_file in template_files.files.iter() {
+        for template_file in chosen_template.files.iter() {
             let template_file_path = Path::new(&self.config.data.settings.template_dir)
                 .join(&self.template)
                 .join(&template_file);
@@ -135,7 +135,6 @@ impl<'a> Action<'a> {
         question: LeetcodeQuestion,
         template: &'a String,
         config: &'a lconfig::Config,
-        language: String,
     ) -> Result<Action<'a>, ActionError> {
         let cwd = match std::env::current_dir()?.into_os_string().into_string() {
             Ok(cwd) => cwd,
@@ -163,7 +162,6 @@ impl<'a> Action<'a> {
             template,
             config,
             project_dir,
-            language,
         })
     }
 }

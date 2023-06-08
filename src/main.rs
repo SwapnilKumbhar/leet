@@ -63,11 +63,7 @@ async fn main() {
 
     // Run the given command
     match args.command {
-        cli::Commands::New {
-            template,
-            link,
-            language,
-        } => {
+        cli::Commands::New { template, link } => {
             // Create a client for leetcode
             let leetcode = Leetcode::new();
 
@@ -79,7 +75,7 @@ async fn main() {
                 }
             };
 
-            let lc_action = action::Action::new(question, &template, &cfg, language).unwrap();
+            let lc_action = action::Action::new(question, &template, &cfg).unwrap();
 
             match lc_action.run() {
                 Ok(_) => println!("Created!"),

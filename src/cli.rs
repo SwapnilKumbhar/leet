@@ -17,11 +17,7 @@ pub struct Args {
 #[derive(Subcommand, Debug)]
 pub enum Commands {
     /// Create a new project
-    New {
-        template: String,
-        language: String,
-        link: String,
-    },
+    New { template: String, link: String },
 
     /// Show currently supported languages
     ShowTemplates {},
