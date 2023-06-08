@@ -33,15 +33,13 @@ SUBCOMMANDS:
 Create a new Project -- 
 
 ```
-leet-new 
 Create a new project
 
 USAGE:
-    leet new [OPTIONS] <TEMPLATE> <LANGUAGE> <LINK>
+    leet new [OPTIONS] <TEMPLATE> <LINK>
 
 ARGS:
     <TEMPLATE>    
-    <LANGUAGE>    
     <LINK>        
 
 OPTIONS:
